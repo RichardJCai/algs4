@@ -4,34 +4,33 @@ public class QuickSort{
     }
     
     public void sort(Comparable[] a,int lo, int hi){
-        if (hi <= lo){}
+        if (hi <= lo){return;}
         else{
             int p = partition(a,lo,hi);
-            System.out.println(p);
-            sort(a,lo,p);
+//            System.out.println(p);
+            sort(a,lo,p-1);
             sort(a,p+1,hi);
         }
     }
     
     public int partition(Comparable[] a,int lo, int hi){
-        int j = lo + 1;
-        int k = hi;
+        int j = lo;
+        int k = hi + 1;
         
         while (true){
-            while(less(a[lo],a[k])){
-                if (k == hi) break;
-                k--;
+            while(less(a[lo],a[--k])){
+                if (k == lo) break;
             }
-            while(less(a[j],a[lo])){
-                if (j == lo) break;
-                j++;
+            while(less(a[++j],a[lo])){
+                if (j == hi) break;
             }
             
             if (j >= k) break;
             exch(a,j,k);
         }
         
-        exch(a,lo,j);
+        exch(a,lo,k);
+        
         return k;
         
     }
