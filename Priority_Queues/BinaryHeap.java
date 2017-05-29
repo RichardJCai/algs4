@@ -12,43 +12,46 @@ public class BinaryHeap<Key extends Comparable<Key>>{
     }
     
     public Key delMax(){
-        Key ret = PQ[N];
-        PQ[0] = PQ[N--];
-        sink(0);
+        Key ret = PQ[1];
+        PQ[1] = PQ[N--];
+        sink(1);
         return ret;
     }
     
     public void insert(Key x){
-        if (N > PQ.length * 3 / 4){
+        if (N > (PQ.length - 1) * 3 / 4){
             resize(true);
         }
         
-        if (N < PQ.length / 4){
+        if (N < (PQ.length - 1) / 4){
             resize(false);
         }
         PQ[++N] = x;
         swim(N);
     }
 
-    public void sink(int N){
+    public void sink(int k){
         int child;
-        if (less(PQ[N*2 + 1], PQ[N*2])) child = N*2;
-        else child = N*2 + 1;
-        if (child > N) return; 
-        if (less(PQ[child],PQ[N])) return;
+        if (k*2 > N) return;
+        else if(k*2 + 1 > N) return;
+        if (less(PQ[k*2 + 1], PQ[k*2])) child = k*2;
+        else child = k*2 + 1;
+        
+        if (less(PQ[child],PQ[k])) return;
         else{
-            exch(PQ,child,N);
+            exch(PQ,child,k);
         }
         sink(child);
     }
     
-    public void swim(int N){
-        if (less(PQ[N/2],PQ[N])){
-            exch(PQ,N,N/2);
+    public void swim(int k){
+        if (k/2 < 1) return;
+        if (less(PQ[k/2],PQ[k])){
+            exch(PQ,k,k/2);
         }
         else return;
         
-        swim(N/2);
+        swim(k/2);
     }
     
     public void resize(boolean big){
@@ -79,7 +82,7 @@ public class BinaryHeap<Key extends Comparable<Key>>{
     }
     
     public void printItems(){
-        for (int i = 0; i < N; i++){
+        for (int i = 0; i < N+1; i++){
             System.out.println(PQ[i]);
         }
     }
