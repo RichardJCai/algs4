@@ -52,8 +52,7 @@ public class OrderedMaxPQ<Key extends Comparable<Key>>{
     
     public Key delMax(){
         Key temp = PQ[N-1];
-        PQ[N-1] = null;
-        N--;
+        PQ[N--] = null;
         return temp;
     }
     
