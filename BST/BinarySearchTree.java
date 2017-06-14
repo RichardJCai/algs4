@@ -1,11 +1,18 @@
+import java.util.*;
+
 public class BinarySearchTree<Key extends Comparable<Key>, Value>{
 
   private Node root;
 
-  private class Node{
+  public class Node{
     private Key key;
     private Value val;
-    private Node left, right;
+    public Node left, right;
+
+    public Node(Key key, Value val){
+      this.key = key;
+      this.val = val;
+    }
   }
 
   public void put(Key key, Value val){
@@ -15,8 +22,8 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
   public Node put(Node node, Key key, Value val){
     if (node == null) return new Node(key,val);
     int cmp = key.compareTo(node.key);
-    if (cmp < 0) put(node.left,key,val);
-    else if (cmp > 0) put(node.right,key,val);
+    if (cmp < 0) node.left = put(node.left,key,val);
+    else if (cmp > 0) node.right = put(node.right,key,val);
     return node;
   }
 
@@ -28,6 +35,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
       else if (key.compareTo(currentNode.key) > 0) currentNode = currentNode.right;
       else return currentNode.val;
     }
+    return null;
   }
 
   public void delete(Key key){
@@ -36,35 +44,45 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
     while (currentNode != null){
       if (key.compareTo(currentNode.key) < 0) currentNode = currentNode.left;
       else if (key.compareTo(currentNode.key) > 0) currentNode = currentNode.right;
+      else break;
     }
 
-    if (currentNode){
-      if (currentNode.left == null && currentNode.right != null){
-        currentNode = currentNode.right;
-      }
-      else if (currentNode.left != null && currentNode.right == null){
-        currentNode = currentNode.left;
-      }
-      else {
-        //Find smallest in right subtree
-        Node tempNode = currentNode.right;
-        while (tempNode.left != null){
-          tempNode = tempNode.left;
-        }
-
-        currentNode.key = tempNode.key;
-        currentNode.val = tempNode.val;
-
-        tempNode = null;
-      }
+    if (currentNode.left == null && currentNode.right != null){
+      currentNode = currentNode.right;
     }
-    //Find the key, if cannot be found, exit
-    //If found, if it only has one child, delete and let the one child be successor
-    //If it has 2 children, swap the key with the smallest in the left tree and then delete
+    else if (currentNode.left != null && currentNode.right == null){
+      currentNode = currentNode.left;
+    }
+    else {
+      //Find smallest in right subtree
+      Node tempNode = currentNode.right;
+      // while (tempNode.left != null){
+      //   tempNode = tempNode.left;
+      // }
+
+      if (currentNode.left != null){
+        tempNode.left = currentNode.left;
+      }
+      if (currentNode.right != null){
+        tempNode.right = currentNode.right;
+      }
+
+      currentNode = tempNode;
+    }
   }
 
   public Iterable<Key> iterator(){
-
+    Queue<Key> q = new LinkedList<Key>();
+    inorder(root,q);
+    return q;
   }
+
+  private void inorder(Node x, Queue<Key> q){
+    if (x == null) return;
+    inorder(x.left,q);
+    q.add(x.key);
+    inorder(x.right,q);
+  }
+
 
 }
