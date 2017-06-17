@@ -50,24 +50,41 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
     return null;
   }
 
+  // public Key floor(Key key){
+  //   //Non recursive implmentation
+  //   Node currentNode = root;
+  //
+  //   while (true){
+  //     if (currentNode == null) return null;
+  //     int cmp = key.compareTo(currentNode.key);
+  //
+  //     if (cmp == 0) return currentNode.key;
+  //     else if (cmp < 0) currentNode = currentNode.left;
+  //     else if (cmp > 0){
+  //       while (true){
+  //         if (currentNode.right == null) return currentNode.key;
+  //         cmp = key.compareTo(currentNode.right.key);
+  //         if (cmp < 0) return currentNode.key;
+  //         currentNode = currentNode.right;
+  //       }
+  //     }
+  //   }
+  // }
+
   public Key floor(Key key){
-    //Non recursive implmentation
-    Node currentNode = root;
+    return floor(key,root).key;
+  }
 
-    while (true){
-      if (currentNode == null) return null;
-      int cmp = key.compareTo(currentNode.key);
+  public Node floor(Key key,Node node){
+    if (node == null) return null;
 
-      if (cmp == 0) return currentNode.key;
-      else if (cmp < 0) currentNode = currentNode.left;
-      else if (cmp > 0){
-        while (true){
-          if (currentNode.right == null) return currentNode.key;
-          cmp = key.compareTo(currentNode.right.key);
-          if (cmp < 0) return currentNode.key;
-          currentNode = currentNode.right;
-        }
-      }
+    int cmp = key.compareTo(node.key);
+    if (cmp == 0) return node;
+    else if (cmp < 0) return floor(key,node.left);
+    else{ //(cmp > 0)
+      Node retNode = floor(key,node.right);
+      if (retNode != null) return retNode;
+      else return node;
     }
   }
 
@@ -88,6 +105,38 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
     return ceil(key,node.right);
   }
 
+  // public void deleteMin(){
+  //   //iterative deleteMin attempt
+  //   Node currentNode = root;
+  //   while (currentNode.left != null){
+  //     currentNode = currentNode.left;
+  //   }
+  //   System.out.println("hello "+ currentNode.key);
+  //   if (currentNode.right == null){
+  //     System.out.println("hello "+ currentNode.key);
+  //     currentNode = null;
+  //   }
+  //   else{
+  //     currentNode = currentNode.right;
+  //   }
+  // }
+
+  public void deleteMin(){
+    deleteMin(root);
+  }
+
+  private Node deleteMin(Node node){
+    if (node.left != null){
+      node.left = deleteMin(node.left);
+    }
+    else{
+      if (node.right == null){
+        return null;
+      }
+      return node.right;
+    }
+    return node;
+  }
 
   public void delete(Key key){
     Node currentNode = root;

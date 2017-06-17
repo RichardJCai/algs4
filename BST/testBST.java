@@ -10,7 +10,14 @@ public class testBST extends BinarySearchTree{
     bst.put(5,5);
     bst.put(24,24);
     bst.put(1,1);
-    System.out.println(bst.floor(8));
+    bst.put(30,30);
+    bst.put(14,14);
+    bst.put(13,13);
+    bst.put(29,29);
+    bst.put(4,4);
+    bst.put(2,2);
+    bst.deleteMin();
+    System.out.println(bst.floor(4));
     System.out.println(bst.ceil(15));
     System.out.println(bst.size());
     Iterable iterator = bst.iterator();
