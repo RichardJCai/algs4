@@ -121,8 +121,35 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
   //   }
   // }
 
+  public void deleteKey(Key key){
+    root = deleteKey(key,root);
+  }
+
+  private Node deleteKey(Key key,Node node){
+    if (node == null) return null;
+    int cmp = key.compareTo(node.key);
+    if (cmp == 0){
+      if (node.right == null && node.left == null){
+        return null;
+      }
+      else if (node.right == null){
+        return node.left;
+      }
+      else if (node.left == null){
+        return node.right;
+      }
+      else{
+        return deleteMin(node.right);
+      }
+    }
+    else if (cmp > 0) node.right = deleteKey(key,node.right);
+    else if (cmp < 0) node.left = deleteKey(key,node.left);
+
+    return node;
+  }
+
   public void deleteMin(){
-    deleteMin(root);
+    root = deleteMin(root);
   }
 
   private Node deleteMin(Node node){
@@ -130,10 +157,21 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
       node.left = deleteMin(node.left);
     }
     else{
-      if (node.right == null){
-        return null;
-      }
       return node.right;
+    }
+    return node;
+  }
+
+  public void deleteMax(){
+    root = deleteMax(root);
+  }
+
+  private Node deleteMax(Node node){
+    if (node.right != null){
+      node.right = deleteMax(node.right);
+    }
+    else{
+      return node.left;
     }
     return node;
   }
