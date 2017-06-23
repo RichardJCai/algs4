@@ -1,19 +1,21 @@
 import java.util.*;
 
-public class BinarySearchTree<Key extends Comparable<Key>, Value>{
+public class RedBlackBST<Key extends Comparable<Key>, Value>{
 
   private Node root;
 
   public class Node{
     private Key key;
     private Value val;
-    public int size; //# of nodes in the subtree
-    public Node left, right;
+    private int size; //# of nodes in the subtree
+    private Node left, right;
+    private Boolean color; //Red = True, Black = False
 
-    public Node(Key key, Value val,int size){
+    public Node(Key key, Value val, int size, Boolean color){
       this.key = key;
       this.val = val;
       this.size = size;
+      this.color = color;
     }
   }
 
@@ -22,12 +24,50 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
   }
 
   public Node put(Node node, Key key, Value val){
-    if (node == null) return new Node(key,val,1);
+    if (node == null) return new Node(key,val,1,true);
     int cmp = key.compareTo(node.key);
     if (cmp < 0) node.left = put(node.left,key,val);
     else if (cmp > 0) node.right = put(node.right,key,val);
+
+    if (isRed(node.right) && !isRed(node.left)) node = rotateLeft(node);
+    if (isRed(node.left) && isRed(node.left.left)) node = rotateRight(node);
+    if (isRed(node.right) && isRed(node.left)) switchColors(node);
+
     node.size = 1 + size(node.right) + size(node.left);
+
     return node;
+  }
+
+  private Node rotateRight(Node node){
+    Node x = node.left;
+    node.left = x.right;
+    x.right = node;
+    x.color = x.right.color;
+    x.size = node.size;
+    node.size = size(node.left) + size(node.right) + 1;
+    return x;
+  }
+
+  private Node rotateLeft(Node node){
+    Node x = node.right;
+    node.right = x.left;
+    x.left = node;
+    x.color = x.left.color;
+    x.size = node.size;
+    node.size = size(node.left) + size(node.right) + 1;
+    return x;
+  }
+
+  private void switchColors(Node node){
+    node.color = !node.color;
+    node.left.color = !node.left.color;
+    node.right.color = !node.right.color;
+  }
+
+  private boolean isRed(Node node){
+    if (node == null) return false;
+    if (node.color == true) return true;
+    else return false;
   }
 
   public int size(){
@@ -49,27 +89,6 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
     }
     return null;
   }
-
-  // public Key floor(Key key){
-  //   //Non recursive implmentation
-  //   Node currentNode = root;
-  //
-  //   while (true){
-  //     if (currentNode == null) return null;
-  //     int cmp = key.compareTo(currentNode.key);
-  //
-  //     if (cmp == 0) return currentNode.key;
-  //     else if (cmp < 0) currentNode = currentNode.left;
-  //     else if (cmp > 0){
-  //       while (true){
-  //         if (currentNode.right == null) return currentNode.key;
-  //         cmp = key.compareTo(currentNode.right.key);
-  //         if (cmp < 0) return currentNode.key;
-  //         currentNode = currentNode.right;
-  //       }
-  //     }
-  //   }
-  // }
 
   public Key floor(Key key){
     return floor(key,root).key;
@@ -104,7 +123,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
     }
     return ceil(key,node.right);
   }
-  
+
   public void deleteKey(Key key){
     root = deleteKey(key,root);
   }

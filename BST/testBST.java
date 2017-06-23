@@ -1,6 +1,7 @@
 public class testBST extends BinarySearchTree{
   public static void main(String args[]){
-    BinarySearchTree bst = new BinarySearchTree();
+    // BinarySearchTree bst = new BinarySearchTree();
+    RedBlackBST bst = new RedBlackBST();
     bst.put(10,10);
     bst.put(6,6);
     bst.put(11,11);
