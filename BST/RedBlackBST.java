@@ -148,6 +148,12 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>{
     else if (cmp > 0) node.right = deleteKey(key,node.right);
     else if (cmp < 0) node.left = deleteKey(key,node.left);
 
+    if (isRed(node.right) && !isRed(node.left)) node = rotateLeft(node);
+    if (isRed(node.left) && isRed(node.left.left)) node = rotateRight(node);
+    if (isRed(node.right) && isRed(node.left)) switchColors(node);
+
+    node.size = 1 + size(node.right) + size(node.left);
+
     return node;
   }
 
@@ -177,39 +183,6 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>{
       return node.left;
     }
     return node;
-  }
-
-  public void delete(Key key){
-    Node currentNode = root;
-
-    while (currentNode != null){
-      if (key.compareTo(currentNode.key) < 0) currentNode = currentNode.left;
-      else if (key.compareTo(currentNode.key) > 0) currentNode = currentNode.right;
-      else break;
-    }
-
-    if (currentNode.left == null && currentNode.right != null){
-      currentNode = currentNode.right;
-    }
-    else if (currentNode.left != null && currentNode.right == null){
-      currentNode = currentNode.left;
-    }
-    else {
-      //Find smallest in right subtree
-      Node tempNode = currentNode.right;
-      // while (tempNode.left != null){
-      //   tempNode = tempNode.left;
-      // }
-
-      if (currentNode.left != null){
-        tempNode.left = currentNode.left;
-      }
-      if (currentNode.right != null){
-        tempNode.right = currentNode.right;
-      }
-
-      currentNode = tempNode;
-    }
   }
 
   public Iterable<Key> iterator(){

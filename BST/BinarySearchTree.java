@@ -50,27 +50,6 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
     return null;
   }
 
-  // public Key floor(Key key){
-  //   //Non recursive implmentation
-  //   Node currentNode = root;
-  //
-  //   while (true){
-  //     if (currentNode == null) return null;
-  //     int cmp = key.compareTo(currentNode.key);
-  //
-  //     if (cmp == 0) return currentNode.key;
-  //     else if (cmp < 0) currentNode = currentNode.left;
-  //     else if (cmp > 0){
-  //       while (true){
-  //         if (currentNode.right == null) return currentNode.key;
-  //         cmp = key.compareTo(currentNode.right.key);
-  //         if (cmp < 0) return currentNode.key;
-  //         currentNode = currentNode.right;
-  //       }
-  //     }
-  //   }
-  // }
-
   public Key floor(Key key){
     return floor(key,root).key;
   }
@@ -104,7 +83,7 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
     }
     return ceil(key,node.right);
   }
-  
+
   public void deleteKey(Key key){
     root = deleteKey(key,root);
   }
@@ -158,39 +137,6 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value>{
       return node.left;
     }
     return node;
-  }
-
-  public void delete(Key key){
-    Node currentNode = root;
-
-    while (currentNode != null){
-      if (key.compareTo(currentNode.key) < 0) currentNode = currentNode.left;
-      else if (key.compareTo(currentNode.key) > 0) currentNode = currentNode.right;
-      else break;
-    }
-
-    if (currentNode.left == null && currentNode.right != null){
-      currentNode = currentNode.right;
-    }
-    else if (currentNode.left != null && currentNode.right == null){
-      currentNode = currentNode.left;
-    }
-    else {
-      //Find smallest in right subtree
-      Node tempNode = currentNode.right;
-      // while (tempNode.left != null){
-      //   tempNode = tempNode.left;
-      // }
-
-      if (currentNode.left != null){
-        tempNode.left = currentNode.left;
-      }
-      if (currentNode.right != null){
-        tempNode.right = currentNode.right;
-      }
-
-      currentNode = tempNode;
-    }
   }
 
   public Iterable<Key> iterator(){
